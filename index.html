@@ -3,165 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Just iOS x LuxeOwn | Get Your iPhone Today</title>
+    <title>Easy Buy Phone Calculator Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .bg-teal { background-color: #008080; }
-        .text-teal { color: #008080; }
-        .bg-gold { background-color: #D4AF37; }
-        .text-gold { color: #D4AF37; }
-        .bg-orange { background-color: #FF8C00; }
-        .border-gold { border-color: #D4AF37; }
-        
-        .hero-gradient {
-            background: linear-gradient(135deg, #008080 0%, #004d4d 100%);
-        }
+        input:disabled + div { background-color: #f3f4f6; color: #9ca3af; cursor: not-allowed; border-color: #e5e7eb; }
+        .hidden-section { display: none; }
     </style>
 </head>
-<body class="bg-white text-gray-800 font-sans">
+<body class="bg-gray-100 p-4 md:p-10">
 
-    <!-- Navbar -->
-    <nav class="flex justify-between items-center p-6 bg-white shadow-sm">
-        <div class="text-2xl font-bold italic">
-            <span class="text-teal">Just</span><span class="text-gold">iOS</span> 
-            <span class="text-gray-400 text-sm font-normal">x LuxeOwn</span>
+    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+        <div class="bg-blue-600 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Calculate at your ease 🤗</h1>
+            <p class="text-blue-100">Select your choice of phone and installment plan.</p>
         </div>
-        <div class="hidden md:block space-x-6 font-medium">
-            <a href="#" class="hover:text-teal">Plans</a>
-            <a href="#" class="hover:text-teal">Requirements</a>
-            <a href="#" class="hover:text-teal">Why Us</a>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-gradient text-white py-16 px-6 md:px-12 flex flex-col md:flex-row items-center">
-        <div class="md:w-1/2 space-y-6">
-            <h1 class="text-5xl md:text-6xl font-extrabold leading-tight">
-                Your Dream iPhone. <span class="text-gold">Immediate</span> Delivery.
-            </h1>
-            <p class="text-xl opacity-90">
-                Zero stress. 50% down payment. Flexible plans for everyone. Get approved in minutes!
-            </p>
-        <a href="https://justi-os-gadget-x9e1.vercel.app">    <button class="bg-orange hover:scale-105 transition-transform text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg">
-                Get Started Now
-            </button></a>
-        </div>
-        <div class="md:w-1/2 mt-10 md:mt-0 flex justify-center">
-            <!-- Replace URL with a photo of a customer smiling with a phone -->
-            <img src="https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?auto=format&fit=crop&w=600&q=80" 
-                 alt="Happy Customer" class="rounded-2xl shadow-2xl border-4 border-gold w-80 h-96 object-cover transform rotate-3">
-        </div>
-    </section>
-
-    <!-- Payment Plans -->
-    <section class="py-16 bg-gray-50 px-6">
-        <h2 class="text-3xl font-bold text-center mb-12">Flexible <span class="text-teal">Payment Plans</span></h2>
-        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <!-- Monthly -->
-            <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-teal">
-                <h3 class="text-2xl font-bold mb-4">Monthly Plan</h3>
-                <ul class="space-y-3 mb-6">
-                    <li><i class="fas fa-check text-teal mr-2"></i> 1 to 3 Months Max</li>
-                    <li><i class="fas fa-check text-teal mr-2"></i> <strong>50% First Deposit</strong></li>
-                    <li><i class="fas fa-check text-teal mr-2"></i> Instant Collection</li>
-                </ul>
-                <div class="text-teal font-bold text-xl">Low Interest</div>
+        <div class="p-6 space-y-6">
+            <!-- 1. Phone Selection -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Select New Phone Model</label>
+                <select id="phoneSelect" class="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" onchange="calculate()">
+                </select>
             </div>
-            <!-- Weekly -->
-            <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-orange">
-                <h3 class="text-2xl font-bold mb-4">Weekly Plan</h3>
-                <ul class="space-y-3 mb-6">
-                    <li><i class="fas fa-check text-orange mr-2"></i> 4 to 24 Weeks</li>
-                    <li><i class="fas fa-check text-orange mr-2"></i> <strong>40% First Deposit</strong></li>
-                    <li><i class="fas fa-check text-orange mr-2"></i> Perfect for Budgeting</li>
-                </ul>
-                <div class="text-orange font-bold text-xl">Pay Small Small</div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Requirements -->
-    <section class="py-16 px-6 max-w-5xl mx-auto">
-        <div class="flex flex-col md:flex-row items-center gap-12">
-            <div class="md:w-1/2">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80" 
-                     alt="Fast Approval" class="rounded-lg shadow-lg">
+            <!-- 2. Custom Downpayment -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Downpayment (You can also edit amount)</label>
+                <input type="number" id="customDeposit" placeholder="Enter specific amount" 
+                    class="w-full p-3 border rounded-lg mb-3 focus:ring-2 focus:ring-blue-500 outline-none" oninput="handleCustomDeposit()">
+                
+                <div class="grid grid-cols-4 gap-2">
+                    <label><input type="radio" name="downpaymentPercent" value="0.4" class="hidden peer" onchange="syncFromPercent(0.4)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">40%</div></label>
+                    <label><input type="radio" name="downpaymentPercent" value="0.5" checked class="hidden peer" onchange="syncFromPercent(0.5)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">50%</div></label>
+                    <label><input type="radio" name="downpaymentPercent" value="0.6" class="hidden peer" onchange="syncFromPercent(0.6)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">60%</div></label>
+                    <label><input type="radio" name="downpaymentPercent" value="0.8" class="hidden peer" onchange="syncFromPercent(0.8)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">80%</div></label>
+                </div>
+                <p id="depositWarning" class="text-xs text-red-500 mt-2 hidden">Minimum deposit must be at least 40% of the price.</p>
             </div>
-            <div class="md:w-1/2">
-                <h2 class="text-3xl font-bold mb-6">What We <span class="text-gold">Require</span></h2>
-                <div class="space-y-4">
-                    <div class="flex items-center p-4 bg-white border border-gray-100 shadow-sm rounded-lg">
-                        <span class="bg-teal text-white w-10 h-10 flex items-center justify-center rounded-full mr-4 font-bold">1</span>
-                        <p class="font-semibold text-lg text-gray-700">Valid NIN</p>
-                    </div>
-                    <div class="flex items-center p-4 bg-white border border-gray-100 shadow-sm rounded-lg">
-                        <span class="bg-teal text-white w-10 h-10 flex items-center justify-center rounded-full mr-4 font-bold">2</span>
-                        <p class="font-semibold text-lg text-gray-700">Bank Statements</p>
-                    </div>
-                    <div class="flex items-center p-4 bg-white border border-gray-100 shadow-sm rounded-lg">
-                        <span class="bg-teal text-white w-10 h-10 flex items-center justify-center rounded-full mr-4 font-bold">3</span>
-                        <p class="font-semibold text-lg text-gray-700">BVN</p>
-                    </div>
-                    <div class="flex items-center p-4 bg-white border border-gray-100 shadow-sm rounded-lg">
-                        <span class="bg-teal text-white w-10 h-10 flex items-center justify-center rounded-full mr-4 font-bold">4</span>
-                        <p class="font-semibold text-lg text-gray-700">Guarantor Phone Number</p>
+
+            <!-- 3. Swap Option -->
+            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                <label class="block text-sm font-semibold text-blue-800 mb-2">Do you want to Swap?</label>
+                <select id="isSwap" class="w-full p-2 border rounded-lg bg-white outline-none" onchange="toggleSwapSection()">
+                    <option value="no">No, Easy buy without swap</option>
+                    <option value="yes">Yes, I want to swap with easy buy</option>
+                </select>
+
+                <div id="swapSection" class="hidden-section mt-4 space-y-4">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">What Phone do you want to swap with?</label>
+                    <select id="swapPhoneModel" class="w-full p-2 border rounded-lg bg-white outline-none">
+                    </select>
+                    <div class="grid grid-cols-1 gap-3 text-sm">
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapScreen" onchange="calculate()"> Screen has been changed</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapCamera" onchange="calculate()"> Camera has issues/changed</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapBack" onchange="calculate()"> Back glass broken</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapCracked" onchange="calculate()"> Screen cracked</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapBattery" onchange="calculate()"> Battery health below 80%</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapSim" onchange="calculate()"> Cannot use local SIM (locked)</label>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Why Choose Us -->
-    <section class="py-16 bg-teal text-white px-6">
-        <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-12">Why Choose Us?</h2>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
-                <div class="p-4">
-                    <i class="fas fa-bolt text-gold text-3xl mb-2"></i>
-                    <p class="font-bold">Fast Approval</p>
+            <!-- 4. Frequency & Duration -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Frequency</label>
+                    <div class="flex flex-col gap-2">
+                        <label class="flex-1"><input type="radio" name="frequency" id="freqMonthly" value="monthly" checked class="hidden peer" onchange="updateDurationOptions()"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-50 peer-checked:border-blue-600 peer-checked:text-blue-600">Monthly</div></label>
+                        <label class="flex-1"><input type="radio" name="frequency" id="freqWeekly" value="weekly" class="hidden peer" onchange="updateDurationOptions()"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-50 peer-checked:border-blue-600 peer-checked:text-blue-600">Weekly</div></label>
+                    </div>
                 </div>
-                <div class="p-4">
-                    <i class="fas fa-smile text-gold text-3xl mb-2"></i>
-                    <p class="font-bold">Easy Process</p>
-                </div>
-                <div class="p-4">
-                    <i class="fas fa-money-bill-wave text-gold text-3xl mb-2"></i>
-                    <p class="font-bold">Quick Disbursement</p>
-                </div>
-                <div class="p-4">
-                    <i class="fas fa-shield-alt text-gold text-3xl mb-2"></i>
-                    <p class="font-bold">Safe & Secure</p>
-                </div>
-                <div class="p-4">
-                    <i class="fas fa-award text-gold text-3xl mb-2"></i>
-                    <p class="font-bold">Warranty Included</p>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Duration</label>
+                    <select id="durationSelect" class="w-full p-3 border rounded-lg bg-gray-50 outline-none" onchange="calculate()"></select>
                 </div>
             </div>
+
+            <!-- 5. Timing & Location -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">When are you ready?</label>
+                    <select id="purchaseReady" class="w-full p-3 border rounded-lg bg-gray-50 outline-none" onchange="calculate()">
+                        <option value="Today">Today</option>
+                        <option value="Tomorrow">Tomorrow</option>
+                        <option value="Next Tomorrow">Next Tomorrow</option>
+                        <option value="3-5 Days">Next 3-5 Days</option>
+                        <option value="Next Week">Next Week</option>
+                        <option value="Next Month">Next Month</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Where Is Your Location?</label>
+                    <input type="text" id="userLocation" placeholder="E.g. Ikeja, Lagos" class="w-full p-3 border rounded-lg bg-gray-50 outline-none" oninput="calculate()">
+                </div>
+            </div>
+
+            <hr class="border-gray-100">
+
+            <!-- Results -->
+            <div class="space-y-4 bg-gray-50 p-4 rounded-xl">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Phone Price:</span>
+                    <span class="font-bold text-gray-800" id="displayPrice">0</span>
+                </div>
+                <div class="flex justify-between text-blue-700 font-bold text-lg">
+                    <span>Pay Today (Deposit):</span>
+                    <span id="displayDeposit">0</span>
+                </div>
+                <div class="flex justify-between text-sm text-gray-500">
+                    <span>Interest Charged:</span>
+                    <span id="displayInterest">0</span>
+                </div>
+                <div class="mt-4 p-4 bg-blue-600 rounded-lg text-white text-center">
+                    <p class="text-xs uppercase opacity-80" id="installmentType">Monthly Installment</p>
+                    <p class="text-3xl font-bold" id="displayInstallment">0</p>
+                </div>
+            </div>
+            <p> Please 🙏🏼 note that if you are swapping, the first deposit will be less than what is stated in the  "pay today" above ⚠️, and it will be discused on whatsapp so please don't panic 😊</p>
+            <a id="whatsappBtn" href="#" target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center font-bold py-4 rounded-xl transition shadow-lg">
+                Buy via WhatsApp
+            </a>
         </div>
-    </section>
+    </div>
 
-    <!-- CTA Section -->
-    <section class="py-20 text-center px-6">
-        <h2 class="text-4xl font-bold mb-4">Ready for your new iPhone?</h2>
-        <p class="text-gray-600 mb-10 max-w-lg mx-auto">Join the LuxeOwn family today and get your device immediately with our flexible plans.</p>
-        
-        <!-- THE BUTTON WITH EDITABLE LINK -->
-        <a href="https://justi-os-gadget-x9e1.vercel.app" 
-           class="bg-orange text-white px-12 py-5 rounded-full font-bold text-2xl shadow-xl hover:bg-orange-600 transition-all inline-block">
-            Get an iPhone
-        </a>
-    </section>
+    <script>
+        // FIXED PHONE DATA ARRAY
+        const phoneData = [
+            { name: "iPhone XR (64GB)", price: 230000 },
+            { name: "iPhone XR (128GB)", price: 250000 }, 
+            { name: "iPhone 11 (64GB)", price: 255000 },
+            { name: "iPhone 11 (128GB)", price: 290000 },
+            { name: "iPhone 11 Pro (64GB)", price: 300000 },
+            { name: "iPhone 11 Pro (256GB)", price: 325000 },
+            { name: "iPhone 11 Pro Max (64GB)", price: 340000 },
+            { name: "iPhone 11 Pro Max (256GB)", price: 370000 },
+            { name: "iPhone 12 (64GB)", price: 310000 },
+            { name: "iPhone 12 (128GB)", price: 330000 },
+            { name: "iPhone 12 (256GB)", price: 390000 },
+            { name: "iPhone 12 Pro (128GB)", price: 400000 },
+            { name: "iPhone 12 Pro (256GB)", price: 450000 },
+            { name: "iPhone 12 Pro Max (128GB)", price: 480000 },
+            { name: "iPhone 12 Pro Max (256GB)", price: 520000 },
+            { name: "iPhone 13 (128GB)", price: 430000 }, 
+            { name: "iPhone 13 (256GB)", price: 480000 }, 
+            { name: "iPhone 13 Pro (128GB)", price: 570000 },
+            { name: "iPhone 13 Pro (256GB)", price: 600000 },
+            { name: "iPhone 13 Pro Max (128GB)", price: 680000 },
+            { name: "iPhone 13 Pro Max (256GB)", price: 700000 },
+            { name: "iPhone 14 Pro (128GB)", price: 690000 },
+            { name: "iPhone 14 Pro (256GB)", price: 710000 },
+            { name: "iPhone 14 Pro Max (128GB)", price: 800000 },
+            { name: "iPhone 14 Pro Max (256GB)", price: 860000 },
+            { name: "iPhone 15 (128GB)", price: 720000 },
+            { name: "iPhone 15 (256GB)", price: 760000 },
+            { name: "iPhone 15 Pro (128GB)", price: 920000 },
+            { name: "iPhone 15 Pro (256GB)", price: 970000 },
+            { name: "iPhone 15 Pro Max (256GB)", price: 1100000 },
+            { name: "iPhone 15 Pro Max (512GB)", price: 1170000 }
+        ];
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-10 px-6 text-center border-t border-gray-800">
-        <p class="mb-4">&copy; 2026 nJust iOS in Partner with LuxeOwn Phones.</p>
-        <div class="flex justify-center space-x-6">
-            <i class="fab fa-instagram hover:text-white cursor-pointer"></i>
-            <i class="fab fa-whatsapp hover:text-white cursor-pointer"></i>
-            <i class="fab fa-twitter hover:text-white cursor-pointer"></i>
-        </div>
-    </footer>
+        const swapModels = ["iPhone 7", "iPhone 8", "iPhone X", "iPhone XR", "iPhone 11", "iPhone 12", "iPhone 13", "iPhone 14", "iPhone 15", "iPhone 16"];
+        const swapCapacities = ["64GB", "128GB", "256GB"];
 
+        window.onload = () => {
+            const phoneSelect = document.getElementById('phoneSelect');
+            phoneData.forEach((phone, index) => {
+                let opt = document.createElement('option');
+                opt.value = index;
+                opt.innerHTML = `${phone.name} - ₦${phone.price.toLocaleString()}`;
+                phoneSelect.appendChild(opt);
+            });
+
+            const swapSelect = document.getElementById('swapPhoneModel');
+            swapModels.forEach(m => {
+                swapCapacities.forEach(c => {
+                    let opt = document.createElement('option');
+                    opt.value = `${m} ${c}`;
+                    opt.innerHTML = `${m} ${c}`;
+                    swapSelect.appendChild(opt);
+                });
+            });
+
+            updateDurationOptions();
+            syncFromPercent(0.5); 
+        };
+
+        function toggleSwapSection() {
+            const section = document.getElementById('swapSection');
+            section.className = document.getElementById('isSwap').value === 'yes' ? 'mt-4 space-y-4' : 'hidden-section';
+            calculate();
+        }
+
+        function syncFromPercent(val) {
+            const phone = phoneData[document.getElementById('phoneSelect').value];
+            document.getElementById('customDeposit').value = Math.round(phone.price * val);
+            calculate();
+        }
+
+        function handleCustomDeposit() {
+            document.querySelectorAll('input[name="downpaymentPercent"]').forEach(r => r.checked = false);
+            calculate();
+        }
+
+        function updateDurationOptions() {
+            const freq = document.querySelector('input[name="frequency"]:checked').value;
+            const durationSelect = document.getElementById('durationSelect');
+            durationSelect.innerHTML = '';
+            
+            if (freq === 'monthly') {
+                [1, 2, 3].forEach(m => {
+                    let opt = document.createElement('option');
+                    opt.value = m;
+                    opt.innerHTML = `${m} Month${m > 1 ? 's' : ''}`;
+                    durationSelect.appendChild(opt);
+                });
+                document.getElementById('installmentType').innerText = "Monthly Installment";
+            } else {
+                [4, 8, 12, 16, 20, 24].forEach(w => {
+                    let opt = document.createElement('option');
+                    opt.value = w;
+                    opt.innerHTML = `${w} Weeks`;
+                    durationSelect.appendChild(opt);
+                });
+                document.getElementById('installmentType').innerText = "Weekly Installment";
+            }
+            calculate();
+        }
+
+        function calculate() {
+            const phoneIdx = document.getElementById('phoneSelect').value;
+            const phone = phoneData[phoneIdx];
+            const customDepVal = parseFloat(document.getElementById('customDeposit').value) || 0;
+            const warning = document.getElementById('depositWarning');
+            const monthlyRadio = document.getElementById('freqMonthly');
+            const weeklyRadio = document.getElementById('freqWeekly');
+
+            const minDeposit = phone.price * 0.40;
+            const fiftyPercent = phone.price * 0.50;
+
+            if (customDepVal < fiftyPercent) {
+                monthlyRadio.disabled = true;
+                if(monthlyRadio.checked) {
+                    weeklyRadio.checked = true;
+                    updateDurationOptions();
+                    return; 
+                }
+            } else {
+                monthlyRadio.disabled = false;
+            }
+
+            if (customDepVal < minDeposit) {
+                warning.classList.remove('hidden');
+            } else {
+                warning.classList.add('hidden');
+            }
+
+            const freq = document.querySelector('input[name="frequency"]:checked').value;
+            const duration = parseInt(document.getElementById('durationSelect').value) || (freq === 'monthly' ? 1 : 4);
+            
+            let deposit = customDepVal;
+            let balance = phone.price - deposit;
+            let interestMonths = freq === 'monthly' ? duration : duration / 4;
+            let totalInterest = balance > 0 ? balance * (0.20 * interestMonths) : 0;
+            let totalRepayment = balance + totalInterest;
+            let installment = Math.round(totalRepayment / duration);
+
+            document.getElementById('displayPrice').innerText = "₦" + phone.price.toLocaleString();
+            document.getElementById('displayDeposit').innerText = "₦" + deposit.toLocaleString();
+            document.getElementById('displayInterest').innerText = "₦" + Math.max(0, totalInterest).toLocaleString();
+            document.getElementById('displayInstallment').innerText = "₦" + Math.max(0, installment).toLocaleString();
+
+            prepareWhatsApp(phone, deposit, freq, duration, installment);
+        }
+
+        function prepareWhatsApp(phone, deposit, freq, duration, installment) {
+            const isSwap = document.getElementById('isSwap').value;
+            let swapDetails = "";
+            if(isSwap === 'yes') {
+                swapDetails = `
+- *SWAP DETAILS:*
+  Model: ${document.getElementById('swapPhoneModel').value}
+  Screen Changed: ${document.getElementById('swapScreen').checked ? 'Yes' : 'No'}
+  Camera Issues: ${document.getElementById('swapCamera').checked ? 'Yes' : 'No'}
+  Back Glass Broken: ${document.getElementById('swapBack').checked ? 'Yes' : 'No'}
+  Screen Cracked: ${document.getElementById('swapCracked').checked ? 'Yes' : 'No'}
+  Battery <80%: ${document.getElementById('swapBattery').checked ? 'Yes' : 'No'}
+  SIM Locked: ${document.getElementById('swapSim').checked ? 'Yes' : 'No'}`;
+            }
+
+            const message = `Hello, I want to buy:
+- *Phone:* ${phone.name}
+- *Price:* ₦${phone.price.toLocaleString()}
+- *My Deposit:* ₦${deposit.toLocaleString()}
+- *Plan:* ${duration} ${freq === 'monthly' ? 'Months' : 'Weeks'} (${freq})
+- *Installment:* ₦${installment.toLocaleString()}
+- *Ready to buy:* ${document.getElementById('purchaseReady').value}
+- *Location:* ${document.getElementById('userLocation').value}${swapDetails}`;
+
+            document.getElementById('whatsappBtn').href = `https://wa.me/2348144154390?text=${encodeURIComponent(message)}`;
+        }
+    </script>
 </body>
 </html>
