@@ -22,7 +22,7 @@
             <!-- 1. Phone Selection -->
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Select New Phone Model</label>
-                <select id="phoneSelect" class="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" onchange="calculate()">
+                <select id="phoneSelect" class="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" onchange="syncFromPercent(0.5)">
                 </select>
             </div>
 
@@ -33,10 +33,10 @@
                     class="w-full p-3 border rounded-lg mb-3 focus:ring-2 focus:ring-blue-500 outline-none" oninput="handleCustomDeposit()">
                 
                 <div class="grid grid-cols-4 gap-2">
-                    <label><input type="radio" name="downpaymentPercent" value="0.4" class="hidden peer" onchange="syncFromPercent(0.4)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">40%</div></label>
-                    <label><input type="radio" name="downpaymentPercent" value="0.5" checked class="hidden peer" onchange="syncFromPercent(0.5)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">50%</div></label>
-                    <label><input type="radio" name="downpaymentPercent" value="0.6" class="hidden peer" onchange="syncFromPercent(0.6)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">60%</div></label>
-                    <label><input type="radio" name="downpaymentPercent" value="0.8" class="hidden peer" onchange="syncFromPercent(0.8)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">80%</div></label>
+                    <label><input type="radio" name="downpaymentPercent" id="radio40" value="0.4" class="hidden peer" onchange="syncFromPercent(0.4)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">40%</div></label>
+                    <label><input type="radio" name="downpaymentPercent" id="radio50" value="0.5" checked class="hidden peer" onchange="syncFromPercent(0.5)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">50%</div></label>
+                    <label><input type="radio" name="downpaymentPercent" id="radio60" value="0.6" class="hidden peer" onchange="syncFromPercent(0.6)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">60%</div></label>
+                    <label><input type="radio" name="downpaymentPercent" id="radio80" value="0.8" class="hidden peer" onchange="syncFromPercent(0.8)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">80%</div></label>
                 </div>
                 <p id="depositWarning" class="text-xs text-red-500 mt-2 hidden">Minimum deposit must be at least 40% of the price.</p>
             </div>
@@ -65,6 +65,7 @@
             </div>
 
             <!-- 4. Frequency & Duration -->
+            <h2 class="text-lg font-bold text-gray-800">How Do You Want To Repay?</h2>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Frequency</label>
@@ -110,16 +111,15 @@
                     <span>Pay Today (Deposit):</span>
                     <span id="displayDeposit">0</span>
                 </div>
-                <div class="flex justify-between text-sm text-gray-500">
-                    <span>Interest Charged:</span>
-                    <span id="displayInterest">0</span>
-                </div>
+                
+                <!-- NOTE: Interest display row has been removed here -->
+
                 <div class="mt-4 p-4 bg-blue-600 rounded-lg text-white text-center">
                     <p class="text-xs uppercase opacity-80" id="installmentType">Monthly Installment</p>
                     <p class="text-3xl font-bold" id="displayInstallment">0</p>
                 </div>
             </div>
-            <p> Please 🙏🏼 note that if you are swapping, the first deposit will be less than what is stated in the  "pay today" above ⚠️, and it will be discused on whatsapp so please don't panic 😊</p>
+            <p class="text-sm italic text-gray-600"> Please 🙏🏼 note that if you are swapping, the first deposit will be less than what is stated in the "pay today" above ⚠️, and it will be discussed on WhatsApp so please don't panic 😊</p>
             <a id="whatsappBtn" href="#" target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center font-bold py-4 rounded-xl transition shadow-lg">
                 Send Request Via WhatsApp
             </a>
@@ -127,43 +127,43 @@
     </div>
 
     <script>
-        // FIXED PHONE DATA ARRAY
         const phoneData = [
-            { name: "iPhone XR (64GB)", price: 230000 },
-            { name: "iPhone XR (128GB)", price: 250000 }, 
-            { name: "iPhone 11 (64GB)", price: 255000 },
-            { name: "iPhone 11 (128GB)", price: 290000 },
-            { name: "iPhone 11 Pro (64GB)", price: 300000 },
-            { name: "iPhone 11 Pro (256GB)", price: 325000 },
-            { name: "iPhone 11 Pro Max (64GB)", price: 340000 },
-            { name: "iPhone 11 Pro Max (256GB)", price: 370000 },
-            { name: "iPhone 12 (64GB)", price: 310000 },
-            { name: "iPhone 12 (128GB)", price: 330000 },
-            { name: "iPhone 12 (256GB)", price: 390000 },
-            { name: "iPhone 12 Pro (128GB)", price: 400000 },
-            { name: "iPhone 12 Pro (256GB)", price: 450000 },
-            { name: "iPhone 12 Pro Max (128GB)", price: 480000 },
-            { name: "iPhone 12 Pro Max (256GB)", price: 520000 },
-            { name: "iPhone 13 (128GB)", price: 430000 }, 
+            { name: "iPhone XR (64GB)", price: 230000 }, { name: "iPhone XR (128GB)", price: 250000 }, 
+            { name: "iPhone 11 (64GB)", price: 255000 }, { name: "iPhone 11 (128GB)", price: 290000 },
+            { name: "iPhone 11 Pro (64GB)", price: 300000 }, { name: "iPhone 11 Pro (256GB)", price: 325000 },
+            { name: "iPhone 11 Pro Max (64GB)", price: 340000 }, { name: "iPhone 11 Pro Max (256GB)", price: 380000 },
+            { name: "iPhone 12 (64GB)", price: 320000 }, { name: "iPhone 12 (128GB)", price: 340000 },
+            { name: "iPhone 12 (256GB)", price: 390000 }, 
+            { name: "iPhone 12 Pro (128GB)", price: 410000 },
+            { name: "iPhone 12 Pro (256GB)", price: 440000 }, 
+            { name: "iPhone 12 Pro Max (128GB)", price: 450000 },
+            { name: "iPhone 12 Pro Max (256GB)", price: 520000 },        
+            { name: "iPhone 13 (128GB)", price: 440000 }, 
             { name: "iPhone 13 (256GB)", price: 480000 }, 
             { name: "iPhone 13 Pro (128GB)", price: 570000 },
-            { name: "iPhone 13 Pro (256GB)", price: 600000 },
+            { name: "iPhone 13 Pro (256GB)", price: 600000 }, 
             { name: "iPhone 13 Pro Max (128GB)", price: 680000 },
             { name: "iPhone 13 Pro Max (256GB)", price: 700000 },
+            { name: "iPhone 14 (128GB)", price: 690000 },   
             { name: "iPhone 14 Pro (128GB)", price: 690000 },
-            { name: "iPhone 14 Pro (256GB)", price: 710000 },
-            { name: "iPhone 14 Pro Max (128GB)", price: 800000 },
-            { name: "iPhone 14 Pro Max (256GB)", price: 860000 },
+            { name: "iPhone 14 Pro (256GB)", price: 710000 }, { name: "iPhone 14 Pro Max (128GB)", price: 800000 },
+            { name: "iPhone 14 Pro Max (256GB)", price: 860000 },     
             { name: "iPhone 15 (128GB)", price: 720000 },
-            { name: "iPhone 15 (256GB)", price: 760000 },
-            { name: "iPhone 15 Pro (128GB)", price: 920000 },
-            { name: "iPhone 15 Pro (256GB)", price: 970000 },
-            { name: "iPhone 15 Pro Max (256GB)", price: 1100000 },
+            { name: "iPhone 15 (256GB)", price: 760000 }, { name: "iPhone 15 Pro (128GB)", price: 920000 },
+            { name: "iPhone 15 Pro (256GB)", price: 970000 }, { name: "iPhone 15 Pro Max (256GB)", price: 1100000 },
             { name: "iPhone 15 Pro Max (512GB)", price: 1170000 }
         ];
 
-        const swapModels = ["iPhone 7", "iPhone 8", "iPhone X", "iPhone XR", "iPhone 11", "iPhone 12", "iPhone 13", "iPhone 14", "iPhone 15", "iPhone 16"];
-        const swapCapacities = ["64GB", "128GB", "256GB"];
+        const swapModels = [
+            "iPhone 7", "iPhone 7 Plus", "iPhone 8", "iPhone 8 Plus", "iPhone X", "iPhone XR", "iPhone XS", "iPhone XS Max",
+            "iPhone 11", "iPhone 11 Pro", "iPhone 11 Pro Max",
+            "iPhone 12", "iPhone 12 Mini", "iPhone 12 Pro", "iPhone 12 Pro Max",
+            "iPhone 13", "iPhone 13 Mini", "iPhone 13 Pro", "iPhone 13 Pro Max",
+            "iPhone 14", "iPhone 14 Plus", "iPhone 14 Pro", "iPhone 14 Pro Max",
+            "iPhone 15", "iPhone 15 Plus", "iPhone 15 Pro", "iPhone 15 Pro Max",
+            "iPhone 16", "iPhone 16 Plus", "iPhone 16 Pro", "iPhone 16 Pro Max"
+        ];
+        const swapCapacities = ["64GB", "128GB", "256GB", "512GB"];
 
         window.onload = () => {
             const phoneSelect = document.getElementById('phoneSelect');
@@ -197,6 +197,13 @@
         function syncFromPercent(val) {
             const phone = phoneData[document.getElementById('phoneSelect').value];
             document.getElementById('customDeposit').value = Math.round(phone.price * val);
+            
+            const radios = [0.4, 0.5, 0.6, 0.8];
+            radios.forEach(r => {
+                const radioId = `radio${r*100}`;
+                document.getElementById(radioId).checked = (r === val);
+            });
+
             calculate();
         }
 
@@ -270,7 +277,6 @@
 
             document.getElementById('displayPrice').innerText = "₦" + phone.price.toLocaleString();
             document.getElementById('displayDeposit').innerText = "₦" + deposit.toLocaleString();
-            document.getElementById('displayInterest').innerText = "₦" + Math.max(0, totalInterest).toLocaleString();
             document.getElementById('displayInstallment').innerText = "₦" + Math.max(0, installment).toLocaleString();
 
             prepareWhatsApp(phone, deposit, freq, duration, installment);
