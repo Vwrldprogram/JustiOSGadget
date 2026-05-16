@@ -6,7 +6,7 @@
     <title>Easy Buy Phone Calculator Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        input:disabled + div { background-color: #f3f4f6; color: #9ca3af; cursor: not-allowed; border-color: #e5e7eb; }
+        input:disabled + div, select:disabled, input[type="radio"]:disabled + div { background-color: #f3f4f6; color: #9ca3af; cursor: not-allowed; border-color: #e5e7eb; }
         .hidden-section { display: none; }
     </style>
 </head>
@@ -32,11 +32,12 @@
                 <input type="number" id="customDeposit" placeholder="Enter specific amount" 
                     class="w-full p-3 border rounded-lg mb-3 focus:ring-2 focus:ring-blue-500 outline-none" oninput="handleCustomDeposit()">
                 
-                <div class="grid grid-cols-4 gap-2">
+                <div class="grid grid-cols-5 gap-1.5 sm:gap-2 text-xs sm:text-sm">
                     <label><input type="radio" name="downpaymentPercent" id="radio40" value="0.4" class="hidden peer" onchange="syncFromPercent(0.4)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">40%</div></label>
                     <label><input type="radio" name="downpaymentPercent" id="radio50" value="0.5" checked class="hidden peer" onchange="syncFromPercent(0.5)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">50%</div></label>
                     <label><input type="radio" name="downpaymentPercent" id="radio60" value="0.6" class="hidden peer" onchange="syncFromPercent(0.6)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">60%</div></label>
                     <label><input type="radio" name="downpaymentPercent" id="radio80" value="0.8" class="hidden peer" onchange="syncFromPercent(0.8)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">80%</div></label>
+                    <label><input type="radio" name="downpaymentPercent" id="radio100" value="1.0" class="hidden peer" onchange="syncFromPercent(1.0)"><div class="text-center p-2 border border-green-600 text-green-600 rounded-lg cursor-pointer peer-checked:bg-green-600 peer-checked:text-white font-semibold">100%</div></label>
                 </div>
                 <p id="depositWarning" class="text-xs text-red-500 mt-2 hidden">Minimum deposit must be at least 40% of the price.</p>
             </div>
@@ -111,10 +112,8 @@
                     <span>Pay Today (Deposit):</span>
                     <span id="displayDeposit">0</span>
                 </div>
-                
-                <!-- NOTE: Interest display row has been removed here -->
 
-                <div class="mt-4 p-4 bg-blue-600 rounded-lg text-white text-center">
+                <div class="mt-4 p-4 bg-blue-600 rounded-lg text-white text-center" id="installmentBox">
                     <p class="text-xs uppercase opacity-80" id="installmentType">Monthly Installment</p>
                     <p class="text-3xl font-bold" id="displayInstallment">0</p>
                 </div>
@@ -198,7 +197,7 @@
             const phone = phoneData[document.getElementById('phoneSelect').value];
             document.getElementById('customDeposit').value = Math.round(phone.price * val);
             
-            const radios = [0.4, 0.5, 0.6, 0.8];
+            const radios = [0.4, 0.5, 0.6, 0.8, 1.0];
             radios.forEach(r => {
                 const radioId = `radio${r*100}`;
                 document.getElementById(radioId).checked = (r === val);
@@ -213,10 +212,24 @@
         }
 
         function updateDurationOptions() {
-            const freq = document.querySelector('input[name="frequency"]:checked').value;
+            const freqRadio = document.querySelector('input[name="frequency"]:checked');
+            const freq = freqRadio ? freqRadio.value : 'monthly';
             const durationSelect = document.getElementById('durationSelect');
             durationSelect.innerHTML = '';
             
+            const phoneIdx = document.getElementById('phoneSelect').value;
+            const phone = phoneData[phoneIdx];
+            const customDepVal = parseFloat(document.getElementById('customDeposit').value) || 0;
+
+            if (customDepVal >= phone.price) {
+                let opt = document.createElement('option');
+                opt.value = 0;
+                opt.innerHTML = `No Plan Needed`;
+                durationSelect.appendChild(opt);
+                document.getElementById('installmentType').innerText = "Full Payment";
+                return;
+            }
+
             if (freq === 'monthly') {
                 [1, 2, 3].forEach(m => {
                     let opt = document.createElement('option');
@@ -244,9 +257,36 @@
             const warning = document.getElementById('depositWarning');
             const monthlyRadio = document.getElementById('freqMonthly');
             const weeklyRadio = document.getElementById('freqWeekly');
+            const durationSelect = document.getElementById('durationSelect');
+            const installmentBox = document.getElementById('installmentBox');
 
             const minDeposit = phone.price * 0.40;
             const fiftyPercent = phone.price * 0.50;
+
+            // Handle Full Payment Exemption
+            if (customDepVal >= phone.price) {
+                monthlyRadio.disabled = true;
+                weeklyRadio.disabled = true;
+                durationSelect.disabled = true;
+                warning.classList.add('hidden');
+                
+                document.getElementById('displayPrice').innerText = "₦" + phone.price.toLocaleString();
+                document.getElementById('displayDeposit').innerText = "₦" + phone.price.toLocaleString();
+                document.getElementById('displayInstallment').innerText = "₦0";
+                document.getElementById('installmentType').innerText = "Outright Purchase";
+                
+                installmentBox.classList.remove('bg-blue-600');
+                installmentBox.classList.add('bg-green-600');
+
+                prepareWhatsApp(phone, phone.price, "Full Payment", 0, 0);
+                return;
+            }
+
+            // Normal installments activation layout logic
+            durationSelect.disabled = false;
+            weeklyRadio.disabled = false;
+            installmentBox.classList.remove('bg-green-600');
+            installmentBox.classList.add('bg-blue-600');
 
             if (customDepVal < fiftyPercent) {
                 monthlyRadio.disabled = true;
@@ -266,7 +306,11 @@
             }
 
             const freq = document.querySelector('input[name="frequency"]:checked').value;
-            const duration = parseInt(document.getElementById('durationSelect').value) || (freq === 'monthly' ? 1 : 4);
+            if (durationSelect.value == "0" || !durationSelect.value) {
+                updateDurationOptions();
+                return;
+            }
+            const duration = parseInt(durationSelect.value) || (freq === 'monthly' ? 1 : 4);
             
             let deposit = customDepVal;
             let balance = phone.price - deposit;
@@ -297,11 +341,16 @@
   SIM Locked: ${document.getElementById('swapSim').checked ? 'Yes' : 'No'}`;
             }
 
+            let planLine = `- *Plan:* ${duration} ${freq === 'monthly' ? 'Months' : 'Weeks'} (${freq})`;
+            if(deposit >= phone.price) {
+                planLine = `- *Plan:* Outright Payment (100% Full Payment)`;
+            }
+
             const message = `Hello, I want to buy:
 - *Phone:* ${phone.name}
 - *Price:* ₦${phone.price.toLocaleString()}
 - *My Deposit:* ₦${deposit.toLocaleString()}
-- *Plan:* ${duration} ${freq === 'monthly' ? 'Months' : 'Weeks'} (${freq})
+${planLine}
 - *Installment:* ₦${installment.toLocaleString()}
 - *Ready to buy:* ${document.getElementById('purchaseReady').value}
 - *Location:* ${document.getElementById('userLocation').value}${swapDetails}`;
