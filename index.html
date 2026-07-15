@@ -19,16 +19,14 @@
         </div>
 
         <div class="p-6 space-y-6">
-            <!-- 1. Phone Selection -->
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Select New Phone Model</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Please Select what phone you want to get</label>
                 <select id="phoneSelect" class="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" onchange="syncFromPercent(0.5)">
                 </select>
             </div>
 
-            <!-- 2. Custom Downpayment -->
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Downpayment (You can also edit amount)</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Please Select Your Downpayment.</label>
                 <input type="number" id="customDeposit" placeholder="Enter specific amount" 
                     class="w-full p-3 border rounded-lg mb-3 focus:ring-2 focus:ring-blue-500 outline-none" oninput="handleCustomDeposit()">
                 
@@ -42,7 +40,6 @@
                 <p id="depositWarning" class="text-xs text-red-500 mt-2 hidden">Minimum deposit must be at least 40% of the price.</p>
             </div>
 
-            <!-- 3. Swap Option -->
             <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
                 <label class="block text-sm font-semibold text-blue-800 mb-2">Do you want to Swap?</label>
                 <select id="isSwap" class="w-full p-2 border rounded-lg bg-white outline-none" onchange="toggleSwapSection()">
@@ -52,21 +49,23 @@
 
                 <div id="swapSection" class="hidden-section mt-4 space-y-4">
                     <label class="block text-xs font-bold text-gray-500 uppercase">What Phone do you want to swap with?</label>
-                    <select id="swapPhoneModel" class="w-full p-2 border rounded-lg bg-white outline-none">
+                    <select id="swapPhoneModel" class="w-full p-2 border rounded-lg bg-white outline-none" onchange="calculate()">
                     </select>
                     <div class="grid grid-cols-1 gap-3 text-sm">
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapScreen" onchange="calculate()"> Screen has been changed</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapScreen" onchange="calculate()"> Screen has been changed?</label>
                         <label class="flex items-center gap-2"><input type="checkbox" id="swapCamera" onchange="calculate()"> Camera has issues/changed</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapBack" onchange="calculate()"> Back glass broken</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapCracked" onchange="calculate()"> Screen cracked</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapBattery" onchange="calculate()"> Battery health below 80%</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapSim" onchange="calculate()"> Cannot use local SIM (locked)</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapBack" onchange="calculate()"> Back glass broken/Cracked?</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapCracked" onchange="calculate()"> Screen cracked?</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapBattery" onchange="calculate()"> Battery health below 80%?</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="swapSim" onchange="calculate()"> Cannot use local SIM (wi-fi only)?</label>
+                    </div>
+
+                    <div id="swapNotice" class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800 space-y-1">
                     </div>
                 </div>
             </div>
 
-            <!-- 4. Frequency & Duration -->
-            <h2 class="text-lg font-bold text-gray-800">How Do You Want To Repay?</h2>
+            <h2 class="text-lg font-bold text-gray-800">How Do You Want To Repay The Remaining Balance?</h2>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Frequency</label>
@@ -81,10 +80,9 @@
                 </div>
             </div>
 
-            <!-- 5. Timing & Location -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">When are you ready?</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">When are you ready to buy?</label>
                     <select id="purchaseReady" class="w-full p-3 border rounded-lg bg-gray-50 outline-none" onchange="calculate()">
                         <option value="Today">Today</option>
                         <option value="Tomorrow">Tomorrow</option>
@@ -102,7 +100,6 @@
 
             <hr class="border-gray-100">
 
-            <!-- Results -->
             <div class="space-y-4 bg-gray-50 p-4 rounded-xl">
                 <div class="flex justify-between">
                     <span class="text-gray-600">Phone Price:</span>
@@ -155,20 +152,24 @@
             { name: "iPhone 15 Pro (256GB)", price: 970000 }, 
             { name: "iPhone 15 Pro Max (256GB)", price: 1100000 },
             { name: "iPhone 15 Pro Max (512GB)", price: 1170000 },
-           { name: "iPhone 16 (128GB)", price: 900000 },
-           { name: "iPhone 16 (256GB)", price: 1000000 },
+            { name: "iPhone 16 (128GB)", price: 900000 },
+            { name: "iPhone 16 (256GB)", price: 1000000 },
         ];
 
-        const swapModels = [
-            "iPhone 7", "iPhone 7 Plus", "iPhone 8", "iPhone 8 Plus", "iPhone X", "iPhone XR", "iPhone XS", "iPhone XS Max",
-            "iPhone 11", "iPhone 11 Pro", "iPhone 11 Pro Max",
-            "iPhone 12", "iPhone 12 Mini", "iPhone 12 Pro", "iPhone 12 Pro Max",
-            "iPhone 13", "iPhone 13 Mini", "iPhone 13 Pro", "iPhone 13 Pro Max",
-            "iPhone 14", "iPhone 14 Plus", "iPhone 14 Pro", "iPhone 14 Pro Max",
-            "iPhone 15", "iPhone 15 Plus", "iPhone 15 Pro", "iPhone 15 Pro Max",
-            "iPhone 16", "iPhone 16 Plus", "iPhone 16 Pro", "iPhone 16 Pro Max"
-        ];
+        // Invisible base values for swap models
+        const baseSwapValues = {
+            "iPhone 7": 30000, "iPhone 7 Plus": 40000, "iPhone 8": 40000, "iPhone 8 Plus": 45000, 
+            "iPhone X": 70000, "iPhone XR": 100000, "iPhone XS": 90000, "iPhone XS Max": 110000,
+            "iPhone 11": 120000, "iPhone 11 Pro": 150000, "iPhone 11 Pro Max": 180000,
+            "iPhone 12": 170000, "iPhone 12 Mini": 140000, "iPhone 12 Pro": 200000, "iPhone 12 Pro Max": 230000,
+            "iPhone 13": 220000, "iPhone 13 Mini": 200000, "iPhone 13 Pro": 270000, "iPhone 13 Pro Max": 305000,
+            "iPhone 14": 280000, "iPhone 14 Plus": 300000, "iPhone 14 Pro": 325000, "iPhone 14 Pro Max": 425000,
+            "iPhone 15": 350000, "iPhone 15 Plus": 370000, "iPhone 15 Pro": 475000, "iPhone 15 Pro Max": 585000,
+            "iPhone 16": 500000, "iPhone 16 Plus": 650000, "iPhone 16 Pro": 650000, "iPhone 16 Pro Max": 700000
+        };
+
         const swapCapacities = ["64GB", "128GB", "256GB", "512GB"];
+        const capacityMultipliers = { "64GB": 1.0, "128GB": 1.1, "256GB": 1.2, "512GB": 1.3 };
 
         window.onload = () => {
             const phoneSelect = document.getElementById('phoneSelect');
@@ -180,10 +181,11 @@
             });
 
             const swapSelect = document.getElementById('swapPhoneModel');
-            swapModels.forEach(m => {
+            Object.keys(baseSwapValues).forEach(m => {
                 swapCapacities.forEach(c => {
                     let opt = document.createElement('option');
-                    opt.value = `${m} ${c}`;
+                    // Store model and capacity separately as data attributes or encoded value
+                    opt.value = `${m}|${c}`;
                     opt.innerHTML = `${m} ${c}`;
                     swapSelect.appendChild(opt);
                 });
@@ -204,7 +206,7 @@
             document.getElementById('customDeposit').value = Math.round(phone.price * val);
             
             const radios = [0.4, 0.5, 0.6, 0.8, 1.0];
-            radios.forEach(r => {
+            radiors = radios.forEach(r => {
                 const radioId = `radio${r*100}`;
                 document.getElementById(radioId).checked = (r === val);
             });
@@ -256,6 +258,43 @@
             calculate();
         }
 
+        // Calculates the diagnostic condition adjustments for the swap phone
+        function getSwapValue() {
+            const swapSelectVal = document.getElementById('swapPhoneModel').value;
+            if (!swapSelectVal) return 0;
+
+            const [model, capacity] = swapSelectVal.split('|');
+            const baseValue = baseSwapValues[model] || 0;
+            const multiplier = capacityMultipliers[capacity] || 1.0;
+            
+            // Adjusted base price on capacity selection
+            let calculatedValue = baseValue * multiplier;
+
+            // Apply modifications based on user criteria
+            let percentageAdjustment = 0;
+
+            // Screen has been changed? (Yes: -3%, No: +5%)
+            percentageAdjustment += document.getElementById('swapScreen').checked ? -0.03 : 0.05;
+
+            // Camera issues? (Yes: -3%, No: +5%)
+            percentageAdjustment += document.getElementById('swapCamera').checked ? -0.03 : 0.05;
+
+            // Back glass broken? (Yes: -3%, No: +5%)
+            percentageAdjustment += document.getElementById('swapBack').checked ? -0.03 : 0.05;
+
+            // Screen cracked? (Yes: -3%, No: +5%)
+            percentageAdjustment += document.getElementById('swapCracked').checked ? -0.03 : 0.05;
+
+            // Battery health below 80%? (Yes: -3%, No: +5%)
+            percentageAdjustment += document.getElementById('swapBattery').checked ? -0.03 : 0.05;
+
+            // SIM locked? (Yes: -10%, No: +5%)
+            percentageAdjustment += document.getElementById('swapSim').checked ? -0.9 : 0.05;
+
+            calculatedValue = calculatedValue * (1 + percentageAdjustment);
+            return Math.max(0, Math.round(calculatedValue));
+        }
+
         function calculate() {
             const phoneIdx = document.getElementById('phoneSelect').value;
             const phone = phoneData[phoneIdx];
@@ -284,7 +323,7 @@
                 installmentBox.classList.remove('bg-blue-600');
                 installmentBox.classList.add('bg-green-600');
 
-                prepareWhatsApp(phone, phone.price, "Full Payment", 0, 0);
+                prepareWhatsApp(phone, phone.price, "Full Payment", 0, 0, 0);
                 return;
             }
 
@@ -325,37 +364,60 @@
             let totalRepayment = balance + totalInterest;
             let installment = Math.round(totalRepayment / duration);
 
+            // Swap Specific Adjustments
+            const isSwap = document.getElementById('isSwap').value;
+            let swapValue = 0;
+            if (isSwap === 'yes') {
+                swapValue = getSwapValue();
+                const actualDownpayment = deposit;
+                const newDownpayment = Math.max(0, actualDownpayment - swapValue);
+                const rawModelName = document.getElementById('swapPhoneModel').value.replace('|', ' ');
+
+                document.getElementById('swapNotice').innerHTML = `
+                    <p>Your actual downpayment is <strong>₦${actualDownpayment.toLocaleString()}</strong>.</p>
+                    <p>Based on the report of your iPhone, your current down payment will be <strong>₦${newDownpayment.toLocaleString()}</strong> plus your <strong>${rawModelName}</strong>.</p>
+                `;
+            } else {
+                document.getElementById('swapNotice').innerHTML = '';
+            }
+
             document.getElementById('displayPrice').innerText = "₦" + phone.price.toLocaleString();
             document.getElementById('displayDeposit').innerText = "₦" + deposit.toLocaleString();
             document.getElementById('displayInstallment').innerText = "₦" + Math.max(0, installment).toLocaleString();
 
-            prepareWhatsApp(phone, deposit, freq, duration, installment);
+            prepareWhatsApp(phone, deposit, freq, duration, installment, swapValue);
         }
 
-        function prepareWhatsApp(phone, deposit, freq, duration, installment) {
+        function prepareWhatsApp(phone, deposit, freq, duration, installment, swapValue) {
             const isSwap = document.getElementById('isSwap').value;
             let swapDetails = "";
+            let planLine = `- *Plan:* ${duration} ${freq === 'monthly' ? 'Months' : 'Weeks'} (${freq})`;
+            
+            if(deposit >= phone.price) {
+                planLine = `- *Plan:* Outright Payment (100% Full Payment)`;
+            }
+
             if(isSwap === 'yes') {
+                const rawModelName = document.getElementById('swapPhoneModel').value.replace('|', ' ');
+                const finalDepositDue = Math.max(0, deposit - swapValue);
                 swapDetails = `
 - *SWAP DETAILS:*
-  Model: ${document.getElementById('swapPhoneModel').value}
+  Model: ${rawModelName}
+  Valuation Credit: ₦${swapValue.toLocaleString()}
   Screen Changed: ${document.getElementById('swapScreen').checked ? 'Yes' : 'No'}
   Camera Issues: ${document.getElementById('swapCamera').checked ? 'Yes' : 'No'}
   Back Glass Broken: ${document.getElementById('swapBack').checked ? 'Yes' : 'No'}
   Screen Cracked: ${document.getElementById('swapCracked').checked ? 'Yes' : 'No'}
   Battery <80%: ${document.getElementById('swapBattery').checked ? 'Yes' : 'No'}
-  SIM Locked: ${document.getElementById('swapSim').checked ? 'Yes' : 'No'}`;
-            }
+  SIM Locked: ${document.getElementById('swapSim').checked ? 'Yes' : 'No'}
 
-            let planLine = `- *Plan:* ${duration} ${freq === 'monthly' ? 'Months' : 'Weeks'} (${freq})`;
-            if(deposit >= phone.price) {
-                planLine = `- *Plan:* Outright Payment (100% Full Payment)`;
+*Adjusted Swap Deposit Due:* ₦${finalDepositDue.toLocaleString()} + ${rawModelName}`;
             }
 
             const message = `Hello, I want to buy:
 - *Phone:* ${phone.name}
 - *Price:* ₦${phone.price.toLocaleString()}
-- *My Deposit:* ₦${deposit.toLocaleString()}
+- *My Selected Deposit:* ₦${deposit.toLocaleString()}
 ${planLine}
 - *Installment:* ₦${installment.toLocaleString()}
 - *Ready to buy:* ${document.getElementById('purchaseReady').value}
