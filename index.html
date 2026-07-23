@@ -1,89 +1,486 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easy Buy Phone Calculator Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        input:disabled + div, select:disabled, input[type="radio"]:disabled + div { background-color: #f3f4f6; color: #9ca3af; cursor: not-allowed; border-color: #e5e7eb; }
-        .hidden-section { display: none; }
+        /* --- RESET & GLOBAL STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            padding: 16px;
+            color: #1f2937;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 40px;
+            }
+        }
+
+        /* --- CONTAINER CARD --- */
+        .card {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            background-color: #2563eb;
+            padding: 24px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            color: #dbeafe;
+            font-size: 0.9rem;
+        }
+
+        /* --- CONTENT BODY --- */
+        .content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- FORM ELEMENTS --- */
+        label.block-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        select:disabled, input:disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+            border-color: #e5e7eb;
+        }
+
+        /* --- PERCENTAGE PILLS --- */
+        .percent-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .percent-btn {
+            position: relative;
+        }
+
+        .percent-btn input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .percent-btn div {
+            text-align: center;
+            padding: 10px 4px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .percent-btn input[type="radio"]:checked + div {
+            background-color: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        .percent-btn-100 div {
+            border-color: #16a34a;
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .percent-btn-100 input[type="radio"]:checked + div {
+            background-color: #16a34a !important;
+            color: #ffffff !important;
+            border-color: #16a34a !important;
+        }
+
+        .warning-text {
+            font-size: 0.75rem;
+            color: #ef4444;
+            margin-top: 6px;
+        }
+
+        .amber-warning {
+            color: #b45309;
+            background-color: #fef3c7;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #fde68a;
+            font-weight: 500;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        /* --- SWAP SECTION --- */
+        .swap-container {
+            background-color: #eff6ff;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+        }
+
+        .hidden-section {
+            display: none !important;
+        }
+
+        .swap-section-title {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .swap-questions {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #dbeafe;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 0.875rem;
+        }
+
+        .swap-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .radio-group-inline {
+            display: flex;
+            gap: 16px;
+        }
+
+        .radio-group-inline label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .notice-box {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #fefce8;
+            border: 1px solid #fef08a;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #854d0e;
+        }
+
+        /* --- LAYOUT GRIDS --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .freq-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .freq-btn {
+            position: relative;
+        }
+
+        .freq-btn input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .freq-btn div {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .freq-btn input[type="radio"]:checked + div {
+            background-color: #eff6ff;
+            border-color: #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        /* --- SUMMARY DISPLAY --- */
+        .summary-box {
+            background-color: #f9fafb;
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-row.bold {
+            color: #1d4ed8;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .installment-box {
+            margin-top: 8px;
+            padding: 16px;
+            background-color: #2563eb;
+            border-radius: 8px;
+            color: #ffffff;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .installment-box.green {
+            background-color: #16a34a !important;
+        }
+
+        .installment-box p.type {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .installment-box p.amount {
+            font-size: 1.875rem;
+            font-weight: 700;
+        }
+
+        /* --- BUTTONS & FOOTER --- */
+        .disclaimer {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: #4b5563;
+            line-height: 1.4;
+        }
+
+        .whatsapp-btn {
+            display: block;
+            width: 100%;
+            background-color: #16a34a;
+            color: #ffffff;
+            text-align: center;
+            font-weight: 700;
+            padding: 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #15803d;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #e5e7eb;
+        }
     </style>
 </head>
-<body class="bg-gray-100 p-4 md:p-10">
+<body>
 
-    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-        <div class="bg-blue-600 p-6 text-white text-center">
-            <h1 class="text-2xl font-bold">Calculate at your ease 🤗</h1>
-            <p class="text-blue-100">Select your choice of phone and installment plan.</p>
+    <div class="card">
+        <div class="header">
+            <h1>Calculate at your ease 🤗</h1>
+            <p>Select your choice of phone and installment plan.</p>
         </div>
 
-        <div class="p-6 space-y-6">
+        <div class="content">
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Please Select what phone you want to get</label>
-                <select id="phoneSelect" class="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" onchange="syncFromPercent(0.5)">
-                </select>
+                <label class="block-label">Please Select what phone you want to get</label>
+                <select id="phoneSelect" onchange="syncFromPercent(0.5)"></select>
             </div>
 
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Please Select Your Downpayment.</label>
-                <input type="number" id="customDeposit" placeholder="Enter specific amount" 
-                    class="w-full p-3 border rounded-lg mb-3 focus:ring-2 focus:ring-blue-500 outline-none" oninput="handleCustomDeposit()">
+                <label class="block-label">Please Select Your Downpayment.</label>
+                <input type="number" id="customDeposit" placeholder="Enter specific amount" style="margin-bottom: 12px;" oninput="handleCustomDeposit()">
                 
-                <div class="grid grid-cols-5 gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                    <label><input type="radio" name="downpaymentPercent" id="radio40" value="0.4" class="hidden peer" onchange="syncFromPercent(0.4)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">40%</div></label>
-                    <label><input type="radio" name="downpaymentPercent" id="radio50" value="0.5" checked class="hidden peer" onchange="syncFromPercent(0.5)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">50%</div></label>
-                    <label><input type="radio" name="downpaymentPercent" id="radio60" value="0.6" class="hidden peer" onchange="syncFromPercent(0.6)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">60%</div></label>
-                    <label><input type="radio" name="downpaymentPercent" id="radio80" value="0.8" class="hidden peer" onchange="syncFromPercent(0.8)"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-600 peer-checked:text-white">80%</div></label>
-                    <label><input type="radio" name="downpaymentPercent" id="radio100" value="1.0" class="hidden peer" onchange="syncFromPercent(1.0)"><div class="text-center p-2 border border-green-600 text-green-600 rounded-lg cursor-pointer peer-checked:bg-green-600 peer-checked:text-white font-semibold">100%</div></label>
+                <div class="percent-grid">
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio40" value="0.4" onchange="syncFromPercent(0.4)"><div>40%</div></label>
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio50" value="0.5" checked onchange="syncFromPercent(0.5)"><div>50%</div></label>
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio60" value="0.6" onchange="syncFromPercent(0.6)"><div>60%</div></label>
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio80" value="0.8" onchange="syncFromPercent(0.8)"><div>80%</div></label>
+                    <label class="percent-btn percent-btn-100"><input type="radio" name="downpaymentPercent" id="radio100" value="1.0" onchange="syncFromPercent(1.0)"><div>100%</div></label>
                 </div>
-                <p id="depositWarning" class="text-xs text-red-500 mt-2 hidden">Minimum deposit must be at least 40% of the price.</p>
+                <p id="depositWarning" class="warning-text hidden-section">Minimum deposit must be at least 40% of the price.</p>
             </div>
 
-            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                <label class="block text-sm font-semibold text-blue-800 mb-2">Do you want to Swap?</label>
-                <select id="isSwap" class="w-full p-2 border rounded-lg bg-white outline-none" onchange="toggleSwapSection()">
+            <div class="swap-container">
+                <label class="block-label" style="color: #1e40af;">Do you want to Swap?</label>
+                <select id="isSwap" onchange="toggleSwapSection()">
                     <option value="no">No, Easy buy without swap</option>
                     <option value="yes">Yes, I want to swap with easy buy</option>
                 </select>
 
-                <div id="swapSection" class="hidden-section mt-4 space-y-4">
-                    <label class="block text-xs font-bold text-gray-500 uppercase">What Phone do you want to swap with?</label>
-                    <select id="swapPhoneModel" class="w-full p-2 border rounded-lg bg-white outline-none" onchange="calculate()">
-                    </select>
-                    <div class="grid grid-cols-1 gap-3 text-sm">
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapScreen" onchange="calculate()"> Screen has been changed?</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapCamera" onchange="calculate()"> Camera has issues/changed</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapBack" onchange="calculate()"> Back glass broken/Cracked?</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapCracked" onchange="calculate()"> Screen cracked?</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapBattery" onchange="calculate()"> Battery health below 80%?</label>
-                        <label class="flex items-center gap-2"><input type="checkbox" id="swapSim" onchange="calculate()"> Cannot use local SIM (wi-fi only)?</label>
+                <div id="swapSection" class="hidden-section" style="margin-top: 16px;">
+                    <label class="swap-section-title">What Phone do you want to swap with?</label>
+                    <select id="swapPhoneModel" onchange="calculate()"></select>
+
+                    <div class="swap-questions">
+                        <!-- Face ID -->
+                        <div class="swap-row">
+                            <span>Face ID working?</span>
+                            <div class="radio-group-inline">
+                                <label><input type="radio" name="swapFaceId" value="yes" checked onchange="calculate()"> Yes</label>
+                                <label><input type="radio" name="swapFaceId" value="no" onchange="calculate()"> No</label>
+                            </div>
+                        </div>
+
+                        <!-- Screen Changed -->
+                        <div class="swap-row">
+                            <span>Screen original (Never changed)?</span>
+                            <div class="radio-group-inline">
+                                <label><input type="radio" name="swapScreen" value="yes" checked onchange="calculate()"> Yes</label>
+                                <label><input type="radio" name="swapScreen" value="no" onchange="calculate()"> No</label>
+                            </div>
+                        </div>
+
+                        <!-- Camera Working -->
+                        <div class="swap-row">
+                            <span>Camera working fully without issues?</span>
+                            <div class="radio-group-inline">
+                                <label><input type="radio" name="swapCamera" value="yes" checked onchange="calculate()"> Yes</label>
+                                <label><input type="radio" name="swapCamera" value="no" onchange="calculate()"> No</label>
+                            </div>
+                        </div>
+
+                        <!-- Back Glass -->
+                        <div class="swap-row">
+                            <span>Back glass clean (Not broken/cracked)?</span>
+                            <div class="radio-group-inline">
+                                <label><input type="radio" name="swapBack" value="yes" checked onchange="calculate()"> Yes</label>
+                                <label><input type="radio" name="swapBack" value="no" onchange="calculate()"> No</label>
+                            </div>
+                        </div>
+
+                        <!-- Screen Cracked -->
+                        <div class="swap-row">
+                            <span>Screen clean (Not cracked)?</span>
+                            <div class="radio-group-inline">
+                                <label><input type="radio" name="swapCracked" value="yes" checked onchange="calculate()"> Yes</label>
+                                <label><input type="radio" name="swapCracked" value="no" onchange="calculate()"> No</label>
+                            </div>
+                        </div>
+
+                        <!-- Battery Health -->
+                        <div class="swap-row">
+                            <span>Battery health 80% or above?</span>
+                            <div class="radio-group-inline">
+                                <label><input type="radio" name="swapBattery" value="yes" checked onchange="calculate()"> Yes</label>
+                                <label><input type="radio" name="swapBattery" value="no" onchange="calculate()"> No</label>
+                            </div>
+                        </div>
+
+                        <!-- Local SIM -->
+                        <div class="swap-row">
+                            <span>Uses local SIM (Unlocked)?</span>
+                            <div class="radio-group-inline">
+                                <label><input type="radio" name="swapSim" value="yes" checked onchange="calculate()"> Yes</label>
+                                <label><input type="radio" name="swapSim" value="no" onchange="calculate()"> No</label>
+                            </div>
+                        </div>
                     </div>
 
-                    <div id="swapNotice" class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800 space-y-1">
-                    </div>
+                    <div id="swapNotice" class="notice-box"></div>
                 </div>
             </div>
 
-            <h2 class="text-lg font-bold text-gray-800">How Do You Want To Repay The Remaining Balance?</h2>
-            <div class="grid grid-cols-2 gap-4">
+            <h2 style="font-size: 1.1rem; font-weight: 700; color: #1f2937;">How Do You Want To Repay The Remaining Balance?</h2>
+            
+            <div class="grid-2">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Frequency</label>
-                    <div class="flex flex-col gap-2">
-                        <label class="flex-1"><input type="radio" name="frequency" id="freqMonthly" value="monthly" checked class="hidden peer" onchange="updateDurationOptions()"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-50 peer-checked:border-blue-600 peer-checked:text-blue-600">Monthly</div></label>
-                        <label class="flex-1"><input type="radio" name="frequency" id="freqWeekly" value="weekly" class="hidden peer" onchange="updateDurationOptions()"><div class="text-center p-2 border rounded-lg cursor-pointer peer-checked:bg-blue-50 peer-checked:border-blue-600 peer-checked:text-blue-600">Weekly</div></label>
+                    <label class="block-label">Frequency</label>
+                    <div class="freq-options">
+                        <label class="freq-btn"><input type="radio" name="frequency" id="freqMonthly" value="monthly" checked><div>Monthly</div></label>
+                        <label class="freq-btn"><input type="radio" name="frequency" id="freqWeekly" value="weekly"><div>Weekly</div></label>
                     </div>
+                    <!-- WARNING FOR 40% DEPOSIT / MONTHLY ATTEMPT -->
+                    <p id="monthlyWarning" class="amber-warning hidden-section">
+                        ⚠️ Monthly repayments require at least a 50% deposit. For 40% deposit, only Weekly repayments are available.
+                    </p>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Duration</label>
-                    <select id="durationSelect" class="w-full p-3 border rounded-lg bg-gray-50 outline-none" onchange="calculate()"></select>
+                    <label class="block-label">Duration</label>
+                    <select id="durationSelect" onchange="calculate()"></select>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid-2">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">When are you ready to buy?</label>
-                    <select id="purchaseReady" class="w-full p-3 border rounded-lg bg-gray-50 outline-none" onchange="calculate()">
+                    <label class="block-label">When are you ready to buy?</label>
+                    <select id="purchaseReady" onchange="calculate()">
                         <option value="Today">Today</option>
                         <option value="Tomorrow">Tomorrow</option>
                         <option value="Next Tomorrow">Next Tomorrow</option>
@@ -93,30 +490,32 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Where Is Your Location?</label>
-                    <input type="text" id="userLocation" placeholder="E.g. Ikeja, Lagos" class="w-full p-3 border rounded-lg bg-gray-50 outline-none" oninput="calculate()">
+                    <label class="block-label">Where Is Your Location?</label>
+                    <input type="text" id="userLocation" placeholder="E.g. Ikeja, Lagos" oninput="calculate()">
                 </div>
             </div>
 
-            <hr class="border-gray-100">
+            <hr>
 
-            <div class="space-y-4 bg-gray-50 p-4 rounded-xl">
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Phone Price:</span>
-                    <span class="font-bold text-gray-800" id="displayPrice">0</span>
+            <div class="summary-box">
+                <div class="summary-row">
+                    <span style="color: #4b5563;">Phone Price:</span>
+                    <span style="font-weight: 700; color: #1f2937;" id="displayPrice">0</span>
                 </div>
-                <div class="flex justify-between text-blue-700 font-bold text-lg">
+                <div class="summary-row bold">
                     <span>Pay Today (Deposit):</span>
                     <span id="displayDeposit">0</span>
                 </div>
 
-                <div class="mt-4 p-4 bg-blue-600 rounded-lg text-white text-center" id="installmentBox">
-                    <p class="text-xs uppercase opacity-80" id="installmentType">Monthly Installment</p>
-                    <p class="text-3xl font-bold" id="displayInstallment">0</p>
+                <div class="installment-box" id="installmentBox">
+                    <p class="type" id="installmentType">Monthly Installment</p>
+                    <p class="amount" id="displayInstallment">0</p>
                 </div>
             </div>
-            <p class="text-sm italic text-gray-600"> Please 🙏🏼 note that if you are swapping, the first deposit will be less than what is stated in the "pay today" above ⚠️, and it will be discussed on WhatsApp so please don't panic 😊</p>
-            <a id="whatsappBtn" href="#" target="_blank" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center font-bold py-4 rounded-xl transition shadow-lg">
+
+            <p class="disclaimer">Please 🙏🏼 note that if you are swapping, the first deposit will be less than what is stated in the "pay today" above ⚠️, and it will be discussed on WhatsApp so please don't panic 😊</p>
+            
+            <a id="whatsappBtn" href="#" target="_blank" class="whatsapp-btn">
                 Send Request Via WhatsApp
             </a>
         </div>
@@ -156,7 +555,6 @@
             { name: "iPhone 16 (256GB)", price: 1000000 },
         ];
 
-        // Invisible base values for swap models
         const baseSwapValues = {
             "iPhone 7": 30000, "iPhone 7 Plus": 40000, "iPhone 8": 40000, "iPhone 8 Plus": 45000, 
             "iPhone X": 70000, "iPhone XR": 100000, "iPhone XS": 90000, "iPhone XS Max": 110000,
@@ -184,10 +582,25 @@
             Object.keys(baseSwapValues).forEach(m => {
                 swapCapacities.forEach(c => {
                     let opt = document.createElement('option');
-                    // Store model and capacity separately as data attributes or encoded value
                     opt.value = `${m}|${c}`;
                     opt.innerHTML = `${m} ${c}`;
                     swapSelect.appendChild(opt);
+                });
+            });
+
+            document.querySelectorAll('input[name="frequency"]').forEach(radio => {
+                radio.addEventListener('click', (e) => {
+                    const phone = phoneData[document.getElementById('phoneSelect').value];
+                    const customDepVal = parseFloat(document.getElementById('customDeposit').value) || 0;
+                    const fiftyPercent = phone.price * 0.50;
+
+                    if (e.target.value === 'monthly' && customDepVal < fiftyPercent) {
+                        document.getElementById('freqWeekly').checked = true;
+                        document.getElementById('monthlyWarning').classList.remove('hidden-section');
+                        updateDurationOptions();
+                    } else if (customDepVal >= fiftyPercent) {
+                        document.getElementById('monthlyWarning').classList.add('hidden-section');
+                    }
                 });
             });
 
@@ -197,7 +610,11 @@
 
         function toggleSwapSection() {
             const section = document.getElementById('swapSection');
-            section.className = document.getElementById('isSwap').value === 'yes' ? 'mt-4 space-y-4' : 'hidden-section';
+            if (document.getElementById('isSwap').value === 'yes') {
+                section.classList.remove('hidden-section');
+            } else {
+                section.classList.add('hidden-section');
+            }
             calculate();
         }
 
@@ -206,7 +623,7 @@
             document.getElementById('customDeposit').value = Math.round(phone.price * val);
             
             const radios = [0.4, 0.5, 0.6, 0.8, 1.0];
-            radiors = radios.forEach(r => {
+            radios.forEach(r => {
                 const radioId = `radio${r*100}`;
                 document.getElementById(radioId).checked = (r === val);
             });
@@ -258,7 +675,11 @@
             calculate();
         }
 
-        // Calculates the diagnostic condition adjustments for the swap phone
+        function getRadioValue(name) {
+            const selected = document.querySelector(`input[name="${name}"]:checked`);
+            return selected ? selected.value : 'yes';
+        }
+
         function getSwapValue() {
             const swapSelectVal = document.getElementById('swapPhoneModel').value;
             if (!swapSelectVal) return 0;
@@ -267,29 +688,18 @@
             const baseValue = baseSwapValues[model] || 0;
             const multiplier = capacityMultipliers[capacity] || 1.0;
             
-            // Adjusted base price on capacity selection
             let calculatedValue = baseValue * multiplier;
-
-            // Apply modifications based on user criteria
             let percentageAdjustment = 0;
 
-            // Screen has been changed? (Yes: -3%, No: +5%)
-            percentageAdjustment += document.getElementById('swapScreen').checked ? -0.03 : 0.04;
-
-            // Camera issues? (Yes: -3%, No: +5%)
-            percentageAdjustment += document.getElementById('swapCamera').checked ? -0.05 : 0.04;
-
-            // Back glass broken? (Yes: -3%, No: +5%)
-            percentageAdjustment += document.getElementById('swapBack').checked ? -0.03 : 0.04;
-
-            // Screen cracked? (Yes: -3%, No: +5%)
-            percentageAdjustment += document.getElementById('swapCracked').checked ? -0.03 : 0.04;
-
-            // Battery health below 80%? (Yes: -3%, No: +5%)
-            percentageAdjustment += document.getElementById('swapBattery').checked ? -0.02 : 0.04;
-
-            // SIM locked? (Yes: -10%, No: +5%)
-            percentageAdjustment += document.getElementById('swapSim').checked ? -0.9 : 0.04;
+            // Face ID: +5% for Yes, -15% for No
+            percentageAdjustment += getRadioValue('swapFaceId') === 'yes' ? 0.05 : -0.15;
+            
+            percentageAdjustment += getRadioValue('swapScreen') === 'yes' ? 0.04 : -0.05;
+            percentageAdjustment += getRadioValue('swapCamera') === 'yes' ? 0.04 : -0.08;
+            percentageAdjustment += getRadioValue('swapBack') === 'yes' ? 0.04 : -0.05;
+            percentageAdjustment += getRadioValue('swapCracked') === 'yes' ? 0.04 : -0.10;
+            percentageAdjustment += getRadioValue('swapBattery') === 'yes' ? 0.04 : -0.05;
+            percentageAdjustment += getRadioValue('swapSim') === 'yes' ? 0.04 : -0.80;
 
             calculatedValue = calculatedValue * (1 + percentageAdjustment);
             return Math.max(0, Math.round(calculatedValue));
@@ -300,6 +710,7 @@
             const phone = phoneData[phoneIdx];
             const customDepVal = parseFloat(document.getElementById('customDeposit').value) || 0;
             const warning = document.getElementById('depositWarning');
+            const monthlyWarning = document.getElementById('monthlyWarning');
             const monthlyRadio = document.getElementById('freqMonthly');
             const weeklyRadio = document.getElementById('freqWeekly');
             const durationSelect = document.getElementById('durationSelect');
@@ -308,46 +719,42 @@
             const minDeposit = phone.price * 0.40;
             const fiftyPercent = phone.price * 0.50;
 
-            // Handle Full Payment Exemption
             if (customDepVal >= phone.price) {
-                monthlyRadio.disabled = true;
-                weeklyRadio.disabled = true;
+                weeklyRadio.disabled = false;
                 durationSelect.disabled = true;
-                warning.classList.add('hidden');
+                warning.classList.add('hidden-section');
+                monthlyWarning.classList.add('hidden-section');
                 
                 document.getElementById('displayPrice').innerText = "₦" + phone.price.toLocaleString();
                 document.getElementById('displayDeposit').innerText = "₦" + phone.price.toLocaleString();
                 document.getElementById('displayInstallment').innerText = "₦0";
                 document.getElementById('installmentType').innerText = "Outright Purchase";
                 
-                installmentBox.classList.remove('bg-blue-600');
-                installmentBox.classList.add('bg-green-600');
+                installmentBox.classList.add('green');
 
                 prepareWhatsApp(phone, phone.price, "Full Payment", 0, 0, 0);
                 return;
             }
 
-            // Normal installments activation layout logic
             durationSelect.disabled = false;
-            weeklyRadio.disabled = false;
-            installmentBox.classList.remove('bg-green-600');
-            installmentBox.classList.add('bg-blue-600');
+            installmentBox.classList.remove('green');
 
+            // Handle 40% / less than 50% deposit warning and switch
             if (customDepVal < fiftyPercent) {
-                monthlyRadio.disabled = true;
-                if(monthlyRadio.checked) {
+                if (monthlyRadio.checked) {
                     weeklyRadio.checked = true;
+                    monthlyWarning.classList.remove('hidden-section');
                     updateDurationOptions();
                     return; 
                 }
             } else {
-                monthlyRadio.disabled = false;
+                monthlyWarning.classList.add('hidden-section');
             }
 
             if (customDepVal < minDeposit) {
-                warning.classList.remove('hidden');
+                warning.classList.remove('hidden-section');
             } else {
-                warning.classList.add('hidden');
+                warning.classList.add('hidden-section');
             }
 
             const freq = document.querySelector('input[name="frequency"]:checked').value;
@@ -364,7 +771,6 @@
             let totalRepayment = balance + totalInterest;
             let installment = Math.round(totalRepayment / duration);
 
-            // Swap Specific Adjustments
             const isSwap = document.getElementById('isSwap').value;
             let swapValue = 0;
             if (isSwap === 'yes') {
@@ -375,7 +781,7 @@
 
                 document.getElementById('swapNotice').innerHTML = `
                     <p>Your actual downpayment is <strong>₦${actualDownpayment.toLocaleString()}</strong>.</p>
-                    <p>Based on the report of your iPhone, your current down payment will be <strong>₦${newDownpayment.toLocaleString()}</strong> plus your <strong>${rawModelName}</strong>.</p>
+                    <p style="margin-top:4px;">Based on the condition of your device, your balance down payment will be <strong>₦${newDownpayment.toLocaleString()}</strong> plus your <strong>${rawModelName}</strong>.</p>
                 `;
             } else {
                 document.getElementById('swapNotice').innerHTML = '';
@@ -400,16 +806,20 @@
             if(isSwap === 'yes') {
                 const rawModelName = document.getElementById('swapPhoneModel').value.replace('|', ' ');
                 const finalDepositDue = Math.max(0, deposit - swapValue);
+                
+                const capitalize = (val) => val === 'yes' ? 'Yes' : 'No';
+
                 swapDetails = `
 - *SWAP DETAILS:*
   Model: ${rawModelName}
   Valuation Credit: ₦${swapValue.toLocaleString()}
-  Screen Changed: ${document.getElementById('swapScreen').checked ? 'Yes' : 'No'}
-  Camera Issues: ${document.getElementById('swapCamera').checked ? 'Yes' : 'No'}
-  Back Glass Broken: ${document.getElementById('swapBack').checked ? 'Yes' : 'No'}
-  Screen Cracked: ${document.getElementById('swapCracked').checked ? 'Yes' : 'No'}
-  Battery <80%: ${document.getElementById('swapBattery').checked ? 'Yes' : 'No'}
-  SIM Locked: ${document.getElementById('swapSim').checked ? 'Yes' : 'No'}
+  Face ID Working: ${capitalize(getRadioValue('swapFaceId'))}
+  Screen Original: ${capitalize(getRadioValue('swapScreen'))}
+  Camera Working: ${capitalize(getRadioValue('swapCamera'))}
+  Back Glass Clean: ${capitalize(getRadioValue('swapBack'))}
+  Screen Uncracked: ${capitalize(getRadioValue('swapCracked'))}
+  Battery >= 80%: ${capitalize(getRadioValue('swapBattery'))}
+  SIM Unlocked: ${capitalize(getRadioValue('swapSim'))}
 
 *Adjusted Swap Deposit Due:* ₦${finalDepositDue.toLocaleString()} + ${rawModelName}`;
             }
