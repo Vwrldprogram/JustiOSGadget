@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,7 +98,7 @@
         /* --- PERCENTAGE PILLS --- */
         .percent-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 6px;
         }
 
@@ -116,11 +115,11 @@
 
         .percent-btn div {
             text-align: center;
-            padding: 10px 4px;
+            padding: 10px 2px;
             border: 1px solid #d1d5db;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             user-select: none;
             transition: all 0.2s;
@@ -359,18 +358,19 @@
 
         <div class="content">
             <div>
-                <label class="block-label">Please Select what phone you want to get</label>
-                <select id="phoneSelect" onchange="syncFromPercent(0.5)"></select>
+                <label class="block-label">Please Select what phone you want to get🛍️🛒</label>
+                <select id="phoneSelect" onchange="syncFromPercent(0.4)"></select>
             </div>
 
             <div>
-                <label class="block-label">Please Select Your Downpayment.</label>
+                <label class="block-label">Please Select Your Downpayment. Monthly repayment starts from 50%</label>
                 <input type="number" id="customDeposit" placeholder="Enter specific amount" style="margin-bottom: 12px;" oninput="handleCustomDeposit()">
                 
                 <div class="percent-grid">
-                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio40" value="0.4" onchange="syncFromPercent(0.4)"><div>40%</div></label>
-                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio50" value="0.5" checked onchange="syncFromPercent(0.5)"><div>50%</div></label>
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio40" value="0.4" checked onchange="syncFromPercent(0.4)"><div>40%</div></label>
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio50" value="0.5" onchange="syncFromPercent(0.5)"><div>50%</div></label>
                     <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio60" value="0.6" onchange="syncFromPercent(0.6)"><div>60%</div></label>
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio70" value="0.7" onchange="syncFromPercent(0.7)"><div>70%</div></label>
                     <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio80" value="0.8" onchange="syncFromPercent(0.8)"><div>80%</div></label>
                     <label class="percent-btn percent-btn-100"><input type="radio" name="downpaymentPercent" id="radio100" value="1.0" onchange="syncFromPercent(1.0)"><div>100%</div></label>
                 </div>
@@ -463,8 +463,8 @@
                 <div>
                     <label class="block-label">Frequency</label>
                     <div class="freq-options">
-                        <label class="freq-btn"><input type="radio" name="frequency" id="freqMonthly" value="monthly" checked><div>Monthly</div></label>
-                        <label class="freq-btn"><input type="radio" name="frequency" id="freqWeekly" value="weekly"><div>Weekly</div></label>
+                        <label class="freq-btn"><input type="radio" name="frequency" id="freqMonthly" value="monthly" onchange="handleFrequencyChange('monthly')"><div>Monthly</div></label>
+                        <label class="freq-btn"><input type="radio" name="frequency" id="freqWeekly" value="weekly" onchange="handleFrequencyChange('weekly')" checked><div>Weekly</div></label>
                     </div>
                     <!-- WARNING FOR 40% DEPOSIT / MONTHLY ATTEMPT -->
                     <p id="monthlyWarning" class="amber-warning hidden-section">
@@ -508,7 +508,7 @@
                 </div>
 
                 <div class="installment-box" id="installmentBox">
-                    <p class="type" id="installmentType">Monthly Installment</p>
+                    <p class="type" id="installmentType">Weekly Installment</p>
                     <p class="amount" id="displayInstallment">0</p>
                 </div>
             </div>
@@ -525,14 +525,14 @@
         const phoneData = [
             { name: "iPhone XR (64GB)", price: 220000 }, { name: "iPhone XR (128GB)", price: 240000 }, 
             { name: "iPhone 11 (64GB)", price: 260000 }, { name: "iPhone 11 (128GB)", price: 280000},
-            { name: "iPhone 11 Pro (64GB)", price: 300000 }, { name: "iPhone 11 Pro (256GB)", price: 330000},
-            { name: "iPhone 11 Pro Max (64GB)", price: 390000 }, { name: "iPhone 11 Pro Max (256GB)", price: 410000 },
+            { name: "iPhone 11 Pro (64GB)", price: 310000 }, { name: "iPhone 11 Pro (256GB)", price: 350000},
+            { name: "iPhone 11 Pro Max (64GB)", price: 360000 }, { name: "iPhone 11 Pro Max (256GB)", price: 390000 },
             { name: "iPhone 12 (64GB)", price: 320000 }, { name: "iPhone 12 (128GB)", price: 340000 },
             { name: "iPhone 12 (256GB)", price: 360000 }, 
             { name: "iPhone 12 Pro (128GB)", price: 400000 },
             { name: "iPhone 12 Pro (256GB)", price: 440000 }, 
             { name: "iPhone 12 Pro Max (128GB)", price: 480000 },
-            { name: "iPhone 12 Pro Max (256GB)", price: 530000 },        
+            { name: "iPhone 12 Pro Max (256GB)", price: 530000},        
             { name: "iPhone 13 (128GB)", price: 430000}, 
             { name: "iPhone 13 (256GB)", price: 450000}, 
             { name: "iPhone 13 Pro (128GB)", price: 530000 },
@@ -552,7 +552,7 @@
             { name: "iPhone 15 Pro Max (256GB)", price: 1100000 },
             { name: "iPhone 15 Pro Max (512GB)", price: 1170000 },
             { name: "iPhone 16 (128GB)", price: 900000 },
-            { name: "iPhone 16 (256GB)", price: 1000000 },
+            { name: "iPhone 16 (256GB)", price: 120000},
         ];
 
         const baseSwapValues = {
@@ -588,25 +588,22 @@
                 });
             });
 
-            document.querySelectorAll('input[name="frequency"]').forEach(radio => {
-                radio.addEventListener('click', (e) => {
-                    const phone = phoneData[document.getElementById('phoneSelect').value];
-                    const customDepVal = parseFloat(document.getElementById('customDeposit').value) || 0;
-                    const fiftyPercent = phone.price * 0.50;
-
-                    if (e.target.value === 'monthly' && customDepVal < fiftyPercent) {
-                        document.getElementById('freqWeekly').checked = true;
-                        document.getElementById('monthlyWarning').classList.remove('hidden-section');
-                        updateDurationOptions();
-                    } else if (customDepVal >= fiftyPercent) {
-                        document.getElementById('monthlyWarning').classList.add('hidden-section');
-                    }
-                });
-            });
-
-            updateDurationOptions();
-            syncFromPercent(0.5); 
+            syncFromPercent(0.4); 
         };
+
+        function handleFrequencyChange(selectedFreq) {
+            const phone = phoneData[document.getElementById('phoneSelect').value];
+            const customDepVal = parseFloat(document.getElementById('customDeposit').value) || 0;
+            const fiftyPercent = phone.price * 0.50;
+
+            if (selectedFreq === 'monthly' && customDepVal < fiftyPercent) {
+                document.getElementById('freqWeekly').checked = true;
+                document.getElementById('monthlyWarning').classList.remove('hidden-section');
+            } else {
+                document.getElementById('monthlyWarning').classList.add('hidden-section');
+            }
+            updateDurationOptions();
+        }
 
         function toggleSwapSection() {
             const section = document.getElementById('swapSection');
@@ -622,23 +619,44 @@
             const phone = phoneData[document.getElementById('phoneSelect').value];
             document.getElementById('customDeposit').value = Math.round(phone.price * val);
             
-            const radios = [0.4, 0.5, 0.6, 0.8, 1.0];
+            const radios = [0.4, 0.5, 0.6, 0.7, 0.8, 1.0];
             radios.forEach(r => {
-                const radioId = `radio${r*100}`;
-                document.getElementById(radioId).checked = (r === val);
+                const radioId = `radio${Math.round(r*100)}`;
+                const el = document.getElementById(radioId);
+                if (el) el.checked = (r === val);
             });
 
-            calculate();
+            const freqRadio = document.querySelector('input[name="frequency"]:checked');
+            if (freqRadio && freqRadio.value === 'monthly' && val < 0.50) {
+                document.getElementById('freqWeekly').checked = true;
+                document.getElementById('monthlyWarning').classList.remove('hidden-section');
+            } else {
+                document.getElementById('monthlyWarning').classList.add('hidden-section');
+            }
+
+            updateDurationOptions();
         }
 
         function handleCustomDeposit() {
             document.querySelectorAll('input[name="downpaymentPercent"]').forEach(r => r.checked = false);
-            calculate();
+            const phone = phoneData[document.getElementById('phoneSelect').value];
+            const customDepVal = parseFloat(document.getElementById('customDeposit').value) || 0;
+            const fiftyPercent = phone.price * 0.50;
+            const freqRadio = document.querySelector('input[name="frequency"]:checked');
+
+            if (freqRadio && freqRadio.value === 'monthly' && customDepVal < fiftyPercent) {
+                document.getElementById('freqWeekly').checked = true;
+                document.getElementById('monthlyWarning').classList.remove('hidden-section');
+            } else {
+                document.getElementById('monthlyWarning').classList.add('hidden-section');
+            }
+
+            updateDurationOptions();
         }
 
         function updateDurationOptions() {
             const freqRadio = document.querySelector('input[name="frequency"]:checked');
-            const freq = freqRadio ? freqRadio.value : 'monthly';
+            const freq = freqRadio ? freqRadio.value : 'weekly';
             const durationSelect = document.getElementById('durationSelect');
             durationSelect.innerHTML = '';
             
@@ -652,6 +670,7 @@
                 opt.innerHTML = `No Plan Needed`;
                 durationSelect.appendChild(opt);
                 document.getElementById('installmentType').innerText = "Full Payment";
+                calculate();
                 return;
             }
 
@@ -660,6 +679,7 @@
                     let opt = document.createElement('option');
                     opt.value = m;
                     opt.innerHTML = `${m} Month${m > 1 ? 's' : ''}`;
+                    if (m === 3) opt.selected = true;
                     durationSelect.appendChild(opt);
                 });
                 document.getElementById('installmentType').innerText = "Monthly Installment";
@@ -691,9 +711,7 @@
             let calculatedValue = baseValue * multiplier;
             let percentageAdjustment = 0;
 
-            // Face ID: +5% for Yes, -15% for No
             percentageAdjustment += getRadioValue('swapFaceId') === 'yes' ? 0.05 : -0.15;
-            
             percentageAdjustment += getRadioValue('swapScreen') === 'yes' ? 0.04 : -0.05;
             percentageAdjustment += getRadioValue('swapCamera') === 'yes' ? 0.04 : -0.08;
             percentageAdjustment += getRadioValue('swapBack') === 'yes' ? 0.04 : -0.05;
@@ -710,20 +728,14 @@
             const phone = phoneData[phoneIdx];
             const customDepVal = parseFloat(document.getElementById('customDeposit').value) || 0;
             const warning = document.getElementById('depositWarning');
-            const monthlyWarning = document.getElementById('monthlyWarning');
-            const monthlyRadio = document.getElementById('freqMonthly');
-            const weeklyRadio = document.getElementById('freqWeekly');
             const durationSelect = document.getElementById('durationSelect');
             const installmentBox = document.getElementById('installmentBox');
 
             const minDeposit = phone.price * 0.40;
-            const fiftyPercent = phone.price * 0.50;
 
             if (customDepVal >= phone.price) {
-                weeklyRadio.disabled = false;
                 durationSelect.disabled = true;
                 warning.classList.add('hidden-section');
-                monthlyWarning.classList.add('hidden-section');
                 
                 document.getElementById('displayPrice').innerText = "₦" + phone.price.toLocaleString();
                 document.getElementById('displayDeposit').innerText = "₦" + phone.price.toLocaleString();
@@ -739,18 +751,6 @@
             durationSelect.disabled = false;
             installmentBox.classList.remove('green');
 
-            // Handle 40% / less than 50% deposit warning and switch
-            if (customDepVal < fiftyPercent) {
-                if (monthlyRadio.checked) {
-                    weeklyRadio.checked = true;
-                    monthlyWarning.classList.remove('hidden-section');
-                    updateDurationOptions();
-                    return; 
-                }
-            } else {
-                monthlyWarning.classList.add('hidden-section');
-            }
-
             if (customDepVal < minDeposit) {
                 warning.classList.remove('hidden-section');
             } else {
@@ -758,11 +758,7 @@
             }
 
             const freq = document.querySelector('input[name="frequency"]:checked').value;
-            if (durationSelect.value == "0" || !durationSelect.value) {
-                updateDurationOptions();
-                return;
-            }
-            const duration = parseInt(durationSelect.value) || (freq === 'monthly' ? 1 : 4);
+            const duration = parseInt(durationSelect.value) || (freq === 'monthly' ? 3 : 4);
             
             let deposit = customDepVal;
             let balance = phone.price - deposit;
