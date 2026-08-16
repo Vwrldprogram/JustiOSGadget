@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy Buy Phone Calculator Pro</title>
+    <title>Buy Now Pay Later</title>
     <style>
         /* --- RESET & GLOBAL STYLES --- */
         * {
@@ -359,7 +359,7 @@
         <div class="content">
             <div>
                 <label class="block-label">Please Select what phone you want to get🛍️🛒</label>
-                <select id="phoneSelect" onchange="syncFromPercent(0.4)"></select>
+                <select id="phoneSelect" onchange="syncFromPercent(0.5)"></select>
             </div>
 
             <div>
@@ -367,8 +367,8 @@
                 <input type="number" id="customDeposit" placeholder="Enter specific amount" style="margin-bottom: 12px;" oninput="handleCustomDeposit()">
                 
                 <div class="percent-grid">
-                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio40" value="0.4" checked onchange="syncFromPercent(0.4)"><div>40%</div></label>
-                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio50" value="0.5" onchange="syncFromPercent(0.5)"><div>50%</div></label>
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio40" value="0.4" onchange="syncFromPercent(0.4)"><div>40%</div></label>
+                    <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio50" value="0.5" checked onchange="syncFromPercent(0.5)"><div>50%</div></label>
                     <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio60" value="0.6" onchange="syncFromPercent(0.6)"><div>60%</div></label>
                     <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio70" value="0.7" onchange="syncFromPercent(0.7)"><div>70%</div></label>
                     <label class="percent-btn"><input type="radio" name="downpaymentPercent" id="radio80" value="0.8" onchange="syncFromPercent(0.8)"><div>80%</div></label>
@@ -588,7 +588,7 @@
                 });
             });
 
-            syncFromPercent(0.4); 
+            syncFromPercent(0.5); 
         };
 
         function handleFrequencyChange(selectedFreq) {
@@ -675,16 +675,17 @@
             }
 
             if (freq === 'monthly') {
-                [1, 2, 3].forEach(m => {
+                const allowedMonths = [1, 2, 3, 6];
+                allowedMonths.forEach(m => {
                     let opt = document.createElement('option');
                     opt.value = m;
                     opt.innerHTML = `${m} Month${m > 1 ? 's' : ''}`;
-                    if (m === 3) opt.selected = true;
+                    if (m === 1) opt.selected = true;
                     durationSelect.appendChild(opt);
                 });
                 document.getElementById('installmentType').innerText = "Monthly Installment";
             } else {
-                [4, 8, 12, 16, 20, 24].forEach(w => {
+                [4, 8, 12, 24].forEach(w => {
                     let opt = document.createElement('option');
                     opt.value = w;
                     opt.innerHTML = `${w} Weeks`;
@@ -711,13 +712,13 @@
             let calculatedValue = baseValue * multiplier;
             let percentageAdjustment = 0;
 
-            percentageAdjustment += getRadioValue('swapFaceId') === 'yes' ? 0.05 : -0.15;
+            percentageAdjustment += getRadioValue('swapFaceId') === 'yes' ? 0.00 : -0.15;
             percentageAdjustment += getRadioValue('swapScreen') === 'yes' ? 0.04 : -0.05;
-            percentageAdjustment += getRadioValue('swapCamera') === 'yes' ? 0.04 : -0.08;
-            percentageAdjustment += getRadioValue('swapBack') === 'yes' ? 0.04 : -0.05;
+            percentageAdjustment += getRadioValue('swapCamera') === 'yes' ? 0.00 : -0.08;
+            percentageAdjustment += getRadioValue('swapBack') === 'yes' ? 0.03 : -0.05;
             percentageAdjustment += getRadioValue('swapCracked') === 'yes' ? 0.04 : -0.10;
-            percentageAdjustment += getRadioValue('swapBattery') === 'yes' ? 0.04 : -0.05;
-            percentageAdjustment += getRadioValue('swapSim') === 'yes' ? 0.04 : -0.80;
+            percentageAdjustment += getRadioValue('swapBattery') === 'yes' ? 0.04 : -0.06;
+            percentageAdjustment += getRadioValue('swapSim') === 'yes' ? 0.03 : -0.80;
 
             calculatedValue = calculatedValue * (1 + percentageAdjustment);
             return Math.max(0, Math.round(calculatedValue));
@@ -758,12 +759,26 @@
             }
 
             const freq = document.querySelector('input[name="frequency"]:checked').value;
-            const duration = parseInt(durationSelect.value) || (freq === 'monthly' ? 3 : 4);
+            const duration = parseInt(durationSelect.value) || (freq === 'monthly' ? 1 : 4);
             
             let deposit = customDepVal;
             let balance = phone.price - deposit;
-            let interestMonths = freq === 'monthly' ? duration : duration / 4;
-            let totalInterest = balance > 0 ? balance * (0.20 * interestMonths) : 0;
+            
+            // Tiered interest calculation (1m: 20%, 2m: 40%, 3m: 60%, 6m: 80%)
+            let interestRate = 0;
+            let monthEquivalent = freq === 'monthly' ? duration : duration / 4;
+            
+            if (monthEquivalent <= 1) {
+                interestRate = 0.20;
+            } else if (monthEquivalent <= 2) {
+                interestRate = 0.40;
+            } else if (monthEquivalent <= 3) {
+                interestRate = 0.60;
+            } else {
+                interestRate = 0.80;
+            }
+
+            let totalInterest = balance > 0 ? balance * interestRate : 0;
             let totalRepayment = balance + totalInterest;
             let installment = Math.round(totalRepayment / duration);
 
